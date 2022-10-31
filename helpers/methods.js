@@ -35,12 +35,17 @@ exports.failResponse = (message, payload = null) => {
     return responset
 }
 
-exports.writeToJsonFile = (object, path) => {
-    fs.writeFileSync(path, JSON.stringify(object), (error) => {
-        if (error) {
-            console.log('An error has occurred ', error);
-            return;
+exports.writeToJsonFile = (jsonContent, path) => {
+    fs.writeFileSync(path, jsonContent, 'utf8', function (err) {
+        if (err) {
+            console.log("An error occured while writing JSON Object to File.");
+            return console.log(err);
         }
-        console.log('Data written successfully to disk');
+
+        console.log("JSON file has been saved.");
     });
+}
+
+exports.readJsonFile = (path) => {
+    
 }

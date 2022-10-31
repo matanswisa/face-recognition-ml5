@@ -3,13 +3,19 @@ require("express-async-errors")
 
 const accessLogMiddleware = require("./middlewares/logger.middleware")
 const routes = require("./routes/api")
+const bodyParser = require('body-parser')
+const express = require("express");
+const app = express();
+const cors = require("cors");
 
-const express = require("express")
-const app = express()
-const cors = require("cors")
 app.use(express.static(__dirname + '/public'));
 
 app.use(cors())
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+// parse application/json
+app.use(bodyParser.json())
 
 app.use(express.json())
 
