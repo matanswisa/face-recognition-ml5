@@ -7,6 +7,28 @@ let video;
 let canvas;
 let face;
 
+async function savePerson(face) {
+  const id = document.getElementById('id').value;
+  const name = document.getElementById('name').value;
+
+
+  const rawResponse = await fetch(`http://localhost:${port}/uploadFace`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id: id,
+      name: name,
+      descriptors: face.descriptor,
+      parts: face.parts,
+    })
+  });
+  const content = await rawResponse.json();
+  console.log(content);
+
+}
 
 function setup() {
   initUploadNewFaceButton();
@@ -53,20 +75,7 @@ function initUploadNewFaceButton() {
     if (face !== null && face) {
       e.preventDefault();
       counterId = timeCounter(Date.now(), timerHtml);
-
-      const rawResponse = await fetch(`http://localhost:${port}/uploadFace`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          descriptors: face.descriptor,
-          parts: face.parts,
-        })
-      });
-      const content = await rawResponse.json();
-      console.log(content);
+      await savePerson(face);
     }
   })
 }

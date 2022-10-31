@@ -7,6 +7,14 @@ const bodyParser = require('body-parser')
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/recognized_faces')
+    .then(() => {
+        console.log('DB Connection eastablished');
+    }).catch((err) => {
+        console.error(err);
+    });
 
 app.use(express.static(__dirname + '/public'));
 

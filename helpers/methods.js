@@ -47,5 +47,10 @@ exports.writeToJsonFile = (jsonContent, path) => {
 }
 
 exports.readJsonFile = (path) => {
-    
+    let people;
+    fs.readFileSync(path, (err, data) => {
+        if (err) { throw err; }
+        people = JSON.parse(data);
+    })
+    return people;
 }
