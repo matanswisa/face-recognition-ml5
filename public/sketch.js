@@ -34,33 +34,25 @@ function setup() {
   faceapi = ml5.faceApi(video, faceOptions, faceReady);
 }
 
-let newPersonCameraCapture = false;
-
-const timeCounter = (start) => setInterval(function () {
+let counterId = 0;
+const timeCounter = (start, timerHtml) => setInterval(function () {
   let delta = Date.now() - start; // milliseconds elapsed since start
-  if (Math.floor(delta / 1000) === 5) {
-    newPersonCameraCapture = false;
+  if (Math.floor(delta / 1000) === 6) {
+    clearInterval(counterId);
     return;
   };
-  // timer.innerHTML = (Math.floor(delta / 1000)); // in seconds
-  console.log(Math.floor(delta / 1000));
-  // alternatively just show wall clock time:
-  // timer.innerHTML = (new Date().toUTCString());
+
+  timerHtml.innerHTML = Math.floor(delta / 1000)
 }, 1000); // update about every second
 
 function initUploadNewFaceButton() {
-  const timer = document.getElementById('timer');
+  const timerHtml = document.getElementById('timer');
   const btn = document.getElementById('new-person-btn');
+
   btn.addEventListener('click', async (e) => {
     if (face !== null && face) {
-      newPersonCameraCapture = true;
       e.preventDefault();
-
-      timer.innerHTML = timeCounter(Date.now());
-      if (newPersonCameraCapture) {
-        clearInterval(timeCounter());
-        return;
-      }
+      counterId = timeCounter(Date.now(), timerHtml);
 
       const rawResponse = await fetch(`http://localhost:${port}/uploadFace`, {
         method: 'POST',
@@ -69,15 +61,12 @@ function initUploadNewFaceButton() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          descriptors: face.descriptors,
+          descriptors: face.descriptor,
           parts: face.parts,
         })
       });
       const content = await rawResponse.json();
-
       console.log(content);
-
-
     }
   })
 }
